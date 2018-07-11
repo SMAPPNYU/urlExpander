@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: urlExpander
+Version: 0.0.2
+Summary: A package for expanding shortened links.
+Home-page: https://github.com/smappnyu
+Author: leon yin
+Author-email: ly501@nyu.edu
+License: MIT
+Description: This package makes working with link data from social media and webpages easier. It not only expands links, but catches errors, and makes parallel link expansion quick and efficient.
+Keywords: unshorten expand link url parallel multithread unwind unwound
+Platform: UNKNOWN

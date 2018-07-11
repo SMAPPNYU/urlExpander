@@ -1,0 +1,8 @@
+setup.py
+urlExpander.egg-info/PKG-INFO
+urlExpander.egg-info/SOURCES.txt
+urlExpander.egg-info/dependency_links.txt
+urlExpander.egg-info/requires.txt
+urlExpander.egg-info/top_level.txt
+urlexpander/__init__.py
+urlexpander/urlexpander.py
