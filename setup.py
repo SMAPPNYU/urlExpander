@@ -1,17 +1,18 @@
+import sys
 from setuptools import setup
 
 setup(
-    name="urlExpander",
-    version='0.0.5',
-    description="A package for expanding shortened links.",
+    name="urlexpander",
+    packages=['urlexpander', 'urlexpander.core'],
+    py_modules=['urlexpander'],
+    version='0.0.8',
+    description="urlExpander is a Python package for quickly and thoroughly expanding shortened URLs.",
     long_description="This package makes working with link data from social media and webpages easier. It not only expands links, but catches errors, and makes parallel link expansion quick and efficient.",
-    packages=['urlexpander'],
     author="leon yin",
     author_email="ly501@nyu.edu",
-    url="https://github.com/smappnyu",
+    url="https://github.com/SMAPPNYU/urlExpander",
     keywords='unshorten expand link url parallel multithread unwind unwound',
     license="MIT",
-    py_modules=['urlexpander'],
     install_requires=[
         'tldextract',
         'pandas',
