@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="urlExpander",
-    version='0.0.2',
+    version='0.0.3',
     description="A package for expanding shortened links.",
     long_description="This package makes working with link data from social media and webpages easier. It not only expands links, but catches errors, and makes parallel link expansion quick and efficient.",
     packages=['urlexpander'],
