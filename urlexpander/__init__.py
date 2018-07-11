@@ -1,4 +1,4 @@
-'''from urlexpander.core.api import (
+from urlexpander.core.api import (
     strip_url,
     get_domain,
     is_short,
@@ -6,8 +6,8 @@
     expand,
     multithread_expand,
     count_matrix
-)'''
+)
 
 from urlexpander.core import utils, constants, html_parser, tweet_parser
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
