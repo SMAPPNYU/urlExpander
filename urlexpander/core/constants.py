@@ -2,7 +2,8 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWe
 
 # these domains need a redirect
 short_domain_ad_redirects = [
-    'sh.st',  'adf.ly', 'lnx.lu'
+    'sh.st',  'adf.ly', 'lnx.lu',
+    'adfoc.us'
 ]
 
 # these are standard domain shorteners
