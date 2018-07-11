@@ -10,4 +10,4 @@ from urlexpander.core.api import (
 
 from urlexpander.core import utils, constants, html_parser, tweet_parser
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
