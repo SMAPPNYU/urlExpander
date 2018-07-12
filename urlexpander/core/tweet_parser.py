@@ -26,6 +26,18 @@ def get_link(tweet):
     '''
     Returns a generator containing tweet metadata about media.
     
+    The metadata dict contains the following columns:
+    
+    columns = {
+      'link.domain' : 'the domain of the URL', 
+      'link.url_long' : 'the URL (this can be short!)', 
+      'link.url_short' : 'The t.co URL', 
+      'tweet.created_at' : 'When the tweet was created', 
+      'tweet.id' : 'The ID of the tweet', 
+      'tweet.text' : 'The Full text of the tweet', 
+      'user.id' : 'The Twitter ID of the tweeter'
+    }
+    
     :input tweet: a nested dictionary of a Tweet either from the streaming or search API.
     :returns: a generator of dictionaries
     '''

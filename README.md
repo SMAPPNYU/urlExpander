@@ -21,6 +21,7 @@ pip install urlexpander
 ```
 
 ## Documentation
+Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush=true) for a quickstart
 We'll generate a readthedocs shortly!
 
 ## Acknowledgements
