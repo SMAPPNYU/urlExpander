@@ -43,6 +43,12 @@ def strip_url(url):
     else:
         return url
 
+def _chunks(l, n):
+    """Yield successive n-sized chunks from l.
+    Taken from https://stackoverflow.com/a/312464/5094480
+    """
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
 def get_domain(url):
     '''
@@ -176,7 +182,7 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
             links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
     
     # chunk the list of arguments
-    for chunk in tqdm(utils.chunks(links_to_unshorten, chunksize=chunksize)):
+    for chunk in tqdm(_chunks(links_to_unshorten, chunksize=chunksize)):
         # create n_workers threads, and map chunked argumnets to them
         with concurrent.futures.ThreadPoolExecutor(max_workers = n_workers) as executor:
             future_to_url = {executor.submit(expand, url, **kwargs): 
