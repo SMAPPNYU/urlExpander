@@ -59,3 +59,8 @@ Please cite urlExpander in your publications if it helps your research. Here is 
   howpublished = {https://github.com/SMAPPNYU/urlExpander},
 }
 ```
+Please also send us your work :)
+
+## Research Output
+urlExpander is being used is several forthcoming publications from the SMaPP Lab (and perhaps from you?).
+We'll keep a running tally here.
