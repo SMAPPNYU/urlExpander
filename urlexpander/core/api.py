@@ -43,12 +43,12 @@ def strip_url(url):
     else:
         return url
 
-def _chunks(l, n):
+def _chunks(l, chunksize):
     """Yield successive n-sized chunks from l.
     Taken from https://stackoverflow.com/a/312464/5094480
     """
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
+    for i in range(0, len(l), chunksize):
+        yield l[i:i + chunksize]
 
 def get_domain(url):
     '''
