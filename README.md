@@ -20,8 +20,26 @@ The multithreaded url expansion was created to overcome the bottleneck of mass l
 pip install urlexpander
 ```
 
+## Quickstart
+```
+import urlexpander as ux
+ux.expand('https://trib.al/xXI5ruM')
+```
+returns
+```
+{'original_url': 'https://trib.al/xXI5ruM',
+ 'resolved_domain': 'breitbart.com',
+ 'resolved_url': 'https://www.breitbart.com/video/2017/12/31/lindsey-graham-trump-just-cant-tweet-iran/'}
+```
+The function shines given a massive list of urls to unshorten:
+```
+ ux.expand('https://trib.al/xXI5ruM')
+```
+
+Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush=true) for a  more indepth quickstart!
+
 ## Documentation
-Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush=true) for a quickstart
+
 We'll generate a readthedocs shortly!
 
 ## Acknowledgements
@@ -34,6 +52,7 @@ Please cite urlExpander in your publications if it helps your research. Here is 
   author = {Leon Yin and SMaPP Lab},
   title = {urlExpander},
   year = {2018}
-  version = {0.0.12},
+  version = {0.0.16},
   howpublished = {https://github.com/SMAPPNYU/urlExpander},
-}```
+}
+```

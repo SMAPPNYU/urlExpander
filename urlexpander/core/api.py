@@ -1,3 +1,9 @@
+"""
+This is the main module of the urlExpander package.
+It houses functions to standardize urls, and extract domain names from links.
+It also has the expand and multithread expand functions, which are the crux of this package.
+"""
+
 import os
 import glob
 import json
@@ -22,6 +28,8 @@ __all__ = ['strip_url',
            'expand',
            'multithread_expand',
            'count_matrix']
+
+__author__ = 'Leon Yin'
 
 def strip_url(url):
     '''
@@ -151,7 +159,7 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
         or just the dataframe of shortened links
         
     
-    :returns: (DataFrame) a dataframe unshorted domains, long, and original URLs.
+    :returns: (list) a list of dictionaries perfect for Pandas Dataframes.
     '''
     
     # shuffle the inputs, this is to reduce the changes of making requests to the same domain.
