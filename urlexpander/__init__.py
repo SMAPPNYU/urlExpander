@@ -10,5 +10,5 @@ from urlexpander.core.api import (
 
 from urlexpander.core import html_parser, tweet_parser, constants, datasets
 
-__version__ = '0.0.11'
+__version__ = '0.0.12'
 __author__= 'Leon Yin'

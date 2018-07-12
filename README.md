@@ -33,6 +33,6 @@ Please cite urlExpander in your publications if it helps your research. Here is 
   author = {Leon Yin and SMaPP Lab},
   title = {urlExpander},
   year = {2018}
-  version = {0.0.11},
+  version = {0.0.12},
   howpublished = {https://github.com/SMAPPNYU/urlExpander},
 }```
