@@ -1,6 +1,12 @@
+"""This module has utility functions for parsing links from Tweets.
+Check out the smappdragon package for Tweet parsing.
+https://github.com/SMAPPNYU/smappdragon
+"""
+
 from urlexpander.core.api import get_domain
 
 __all__ = ['get_link']
+__author__= 'Leon Yin'
 
 def _get_full_text(tweet):
     '''
@@ -45,3 +51,4 @@ def get_link(tweet):
                 r['link.url_short'] = url.get('url')
 
                 yield r  
+                

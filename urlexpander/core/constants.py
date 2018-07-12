@@ -1,3 +1,10 @@
+'''These are variables that are useful to reference.
+There are several curated lists of link shortening domains,
+the url of datasets for tutorials.
+'''
+
+__author__= 'Leon Yin'
+
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'}
 
 # these domains need a redirect
@@ -34,5 +41,8 @@ short_domain_media = [
     
 ]
 
-
 all_short_domains = short_domain_ad_redirects + short_domain + ['ln.is']
+
+congress_dataset_url = ('https://raw.githubusercontent.com/SMAPPNYU/'
+                        'urlExpander/master/datasets/'
+                        'congress_sample_links.csv?flush=true')

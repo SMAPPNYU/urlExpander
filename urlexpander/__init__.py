@@ -8,6 +8,7 @@ from urlexpander.core.api import (
     count_matrix
 )
 
-from urlexpander.core import utils, constants, html_parser, tweet_parser
+from urlexpander.core import html_parser, tweet_parser, constants, datasets
 
-__version__ = '0.0.9'
+__version__ = '0.0.11'
+__author__= 'Leon Yin'

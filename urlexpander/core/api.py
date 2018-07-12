@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 import tldextract
 
-from urlexpander.core import constants, utils
+from urlexpander.core import constants
 
 __all__ = ['strip_url',
            'get_domain',
@@ -22,6 +22,7 @@ __all__ = ['strip_url',
            'expand',
            'multithread_expand',
            'count_matrix']
+__author__= 'Leon Yin'
 
 def strip_url(url):
     '''
@@ -55,33 +56,38 @@ def get_domain(url):
     
     return domain
 
-def is_short(url, list_of_domains=constants.all_short_domains):
+def is_short(url, list_of_domains=[]):
     '''
     A function which returns True if a domain is in a list_of_domains. 
     Make sure that domain and list_of_domains is preprocessed (or not at all),
     in the same way.
     
     :input domain: (str) a standardized domain name
-    :input list_of_domains: (list of str) of standardized domain names
+    :input list_of_domains: (list of str) of standardized domain names, defaults to `constants.all_short_domains`
     :returns:
     '''
+    if not list_of_domains:
+        list_of_domains =constants.all_short_domains
     domain = get_domain(url)
     
-
     return is_short_domain(domain, list_of_domains=list_of_domains)
 
-def is_short_domain(domain, list_of_domains=constants.all_short_domains):
+def is_short_domain(domain, list_of_domains=[]):
     '''
     A function which returns True if a domain is in a list_of_domains. 
     Make sure that domain and list_of_domains is preprocessed (or not at all),
     in the same way.
     
     :input domain: (str) a standardized domain name
-    :input list_of_domains: (list of str) of standardized domain names
+    :input list_of_domains: (list of str) of standardized domain names, defaults to `constants.all_short_domains`
     :returns:
     '''
+    if not list_of_domains:
+        list_of_domains = constants.all_short_domains
+        
     if domain in list_of_domains:
         return True
+    
     return False
 
 def _parse_error(error):
@@ -102,8 +108,16 @@ def _parse_error(error):
         domain, url_endpoint = -1, error
     return domain, url_endpoint
 
-
-def expand(link, timeout=2, **kwargs):
+def _chunks(iterable, chunksize):
+    """Yield successive n-sized chunks from l.
+    
+    :input iterable: an iterable
+    :input chunksize: chunksize
+    """
+    for i in range(0, len(iterable), chunksize):
+        yield iterable[i:i + chunksize]
+    
+def expand(link, timeout=2, dscriptive=False, **kwargs):
     '''
     Expands a url, while taking into consideration: special link shortener or analytics platforms that either need a sophisticated
     redirect(st.sh), or parsing of the url (ln.is)
@@ -126,7 +140,7 @@ def expand(link, timeout=2, **kwargs):
         url_long = link.replace('ln.is/', '')
         domain = get_domain(url_long)
         
-    elif domain in constants.short_domain_ad_redirects:
+    if domain in constants.short_domain_ad_redirects:
         url_long = unshortenit.UnshortenIt().unshorten(link,
                                                        timeout=timeout)
         domain = get_domain(url_long)
@@ -164,11 +178,15 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
         with open(cache_file, 'r') as f_:
             for line in f_:
                 out.append(json.loads(line))
+            # which urls are already in the temp file?
             abd_ = [_['original_url'] for _ in out]
+            # which urls are in the temp file AND we want to unshorten
+            out = [link for link in out if link['original_url'] in links_to_unshorten]
+            # which links do we have left?
             links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
     
     # chunk the list of arguments
-    for chunk in tqdm(utils.chunks(links_to_unshorten, chunksize=chunksize)):
+    for chunk in tqdm(_chunks(links_to_unshorten, chunksize=chunksize)):
         # create n_workers threads, and map chunked argumnets to them
         with concurrent.futures.ThreadPoolExecutor(max_workers = n_workers) as executor:
             future_to_url = {executor.submit(expand, url, **kwargs): 
@@ -190,12 +208,12 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
     error = [{i: _} for i, _ in enumerate(out) if not isinstance(_, dict)]
     
     # read the rest to a dataframe
-    df = pd.DataFrame([row for row in out if isinstance(row, dict)])
+    results = [row for row in out if isinstance(row, dict)]
     
     if return_errors:
-        return df, error
+        return results, error
     else:
-        return df
+        return results
     
 
 def count_matrix(df, user_col='user.id', domain_col='link.domain', 

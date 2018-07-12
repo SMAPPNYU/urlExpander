@@ -1,3 +1,7 @@
+"""This module has utility functions for scraping text from URLs,
+Specifically it helps get the title, description (like what shows up on Google), and paragraphs.
+"""
+
 import re
 import html
 import requests
@@ -9,6 +13,8 @@ __all__ = ['get_webpage_meta',
            'get_webpage_paragraphs',
            'get_webpage_description',
            'get_webpage_title']
+__author__= 'Leon Yin'
+
 
 def _search_webpage_title(text, headers=constants.headers, **kwargs):
     title = None
