@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 import tldextract
 
-from urlexpander.core import constants, utils
+from urlexpander.core import constants
 
 __all__ = ['strip_url',
            'get_domain',
