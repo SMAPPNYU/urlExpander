@@ -33,17 +33,20 @@ returns
 ```
 The function shines given a massive list of urls to unshorten:
 ```
- ux.expand('https://trib.al/xXI5ruM')
+resolved_links = ux.multithread_expand(list_of_short_urls, 
+                                       chunksize=1280, 
+                                       n_workers=64,
+                                       cache_file='tmp.json',
+                                       return_errors=False)
 ```
 
-Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush=true) for a  more indepth quickstart!
+Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush=true) for a  more in-depth quickstart!
 
 ## Documentation
-
 We'll generate a readthedocs shortly!
 
 ## Acknowledgements
-urlExpander was written by [Leon Yin](http://www.leonyin.org/) with major contributions by Nicole Baram and Gregory Eady for the [Social Media and Political Participation Lab at NYU](https://wp.nyu.edu/smapp/). 
+urlExpander was written by [Leon Yin](http://www.leonyin.org/) with contributions by Nicole Baram and Gregory Eady for the [Social Media and Political Participation Lab at NYU](https://wp.nyu.edu/smapp/). 
 
 Please cite urlExpander in your publications if it helps your research. Here is an example BibTeX entry:
 
