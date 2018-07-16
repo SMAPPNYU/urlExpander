@@ -5,7 +5,7 @@ from urlexpander.core import constants
 __all__ = ['congress_twitter_links']
 __author__= 'Leon Yin'
 
-def congress_twitter_links():
+def load_congress_twitter_links():
     '''
     Returns a Pandas dataframe of a random sample of 50K 
     URLs parsed from Twitter aaccounts from the 115th congress.
@@ -24,6 +24,18 @@ def congress_twitter_links():
     
     :returns: (df) of Tweets with cols 
     '''
-    df_congress = pd.read_csv(constants.congress_dataset_url,
+    congress = pd.read_csv(constants.congress_dataset_url,
                               dtype={'tweet.id':str,'user.id':str})
-    return df_congress
+    return congress
+
+
+def load_us_national_domains():
+    '''
+    Returns a Pandas Dataframe of top-level domains
+    of national media sites.
+    
+    :returns: (df) of domains
+    '''
+    us_national_domains = pd.read_csv(constants.us_nation_domain_url)
+    
+    return us_national_domains
