@@ -29,13 +29,13 @@ def load_congress_twitter_links():
     return congress
 
 
-def load_us_national_domains():
+def load_us_national_media_outlets():
     '''
     Returns a Pandas Dataframe of top-level domains
     of national media sites.
     
-    :returns: (df) of domains
+    :returns: (np array) of top-level domains
     '''
     us_national_domains = pd.read_csv(constants.us_nation_domain_url)
     
-    return us_national_domains
+    return us_national_domains.url.values

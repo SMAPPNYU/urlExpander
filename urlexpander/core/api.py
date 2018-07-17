@@ -160,7 +160,7 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
                        cache_file=None, random_seed=303, 
                        return_errors=True, **kwargs):
     '''
-    Calls unshorten_3 with multiple (n_workers) threads to unshorten a list of urls.
+    Calls expand with multiple (n_workers) threads to unshorten a list of urls.
     
     :param links_to_unshorten: (list) a list of urls (str) to unshorten
     :param chunksize: (int) chunks links_to_unshorten, which makes computation quicker with larger inputs
@@ -184,8 +184,8 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
     if cache_file and os.path.exists(cache_file):
         with open(cache_file, 'r') as f_:
             for line in f_:
-                out.append(json.loads(line))
-            abd_ = [_['original_url'] for _ in out]
+                unshortened_urls.append(json.loads(line))
+            abd_ = [_['original_url'] for _ in unshortened_urls]
             links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
     
     # chunk the list of arguments
@@ -201,12 +201,13 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
                     data = str(type(exc))
                     error.append({chunk[i] : str(type(exc))})
                 finally:
-                    unshortened_urls.append(data)
-                    # save the results
-                    if cache_file and isinstance(data, dict):
-                        with open(cache_file, 'a') as f_:
-                            f_.write(json.dumps(data) + '\n')
-    
+                    if isinstance(data, dict):
+                        unshortened_urls.append(data)
+                        # save the results
+                        if cache_file:
+                            with open(cache_file, 'a') as f_:
+                                f_.write(json.dumps(data) + '\n')
+        
     if return_errors:
         return unshortened_urls, error
     else:

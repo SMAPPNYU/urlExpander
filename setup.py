@@ -21,7 +21,7 @@ setup(
     name="urlexpander",
     packages=['urlexpander', 'urlexpander.core'],
     py_modules=['urlexpander'],
-    version='0.0.25',
+    version='0.0.28',
     description="urlExpander is a Python package for quickly and thoroughly expanding shortened URLs.",
     long_description=long_description,
     author="leon yin",
