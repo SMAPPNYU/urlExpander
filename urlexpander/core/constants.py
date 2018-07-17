@@ -10,7 +10,18 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWe
 # these domains need a redirect (Leon Yin + UnshortenIT 2018)
 short_domain_ad_redirects = [
     'sh.st',  'adf.ly', 'lnx.lu',
-    'adfoc.us'
+    'adfoc.us', 'j.gs','q.gs',
+    'u.bb', 'ay.gy', 'atominik.com',
+    'tinyium.com', 'microify.com', 'linkbucks.com',
+    'www.linkbucks.com', 'jzrputtbut.net', 'any.gs',
+    'cash4links.co', 'cache4files.co', 'dyo.gs',
+    'filesonthe.net', 'goneviral.com', 'megaline.co',
+    'miniurls.co', 'qqc.co', 'seriousdeals.net',
+    'theseblogs.com', 'theseforums.com',
+    'tinylinks.co', 'tubeviral.com', 'ultrafiles.net',
+    'urlbeat.net', 'whackyvidz.com','yyv.co',
+    'href.li', 'anonymz.com', 'festyy.com', 
+    'ceesty.com', 'tiny.cc'
 ]
 
 # these are standard domain shorteners (Leon Yin 2018)
@@ -21,14 +32,14 @@ short_domain = [
     'smq.tc',  'trib.al', 'is.gd',
     'paper.li', 'waa.ai', 'tinyurl.com',
     'ht.ly', '1.usa.gov', 'deck.ly',
-    'bit.do', 'tiny.cc', 'lc.chat',
+    'bit.do', 'lc.chat', 'urls.tn',
     'soo.gd',  's2r.co', 'clicky.me',
     'budurl.com', 'bc.vc', 'branch.io',
     'capsulink.com', 'ux9.de', 'fuck.it',
     't2m.io', 'shrt.li', 'elbo.in',
     'shrtfly.com', 'hiveam.com',
     'slink.be', 'plu.sh', 'cutt.ly',
-    'zii.bz', 'munj.pw', 'urls.tn',
+    'zii.bz', 'munj.pw', 
 ]
 
 # there are domain shorteners for common news outlets (Leon Yin 2018).

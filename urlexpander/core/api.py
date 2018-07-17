@@ -100,9 +100,8 @@ def is_short_domain(domain, list_of_domains=constants.all_short_domains):
 
 def _parse_error(error):
     '''
-    Although some redirects no longer work, we can still use the response from the error to figure out where it woudl have gone.
-    This function parses error messages from requests.head (called in unshorten), to try to figure out what website the bit-link
-    was intended to re-direct to.
+    Although some redirects no longer work, we can still use the response from the error to figure out where it would have gone.
+    This function parses error messages from requests.head (called in expand), to try to figure out what website the bit-link was intended to re-direct to.
     
     :param error: a string of the error response from unshorten.
     :returns: the domain parsed from the error string, and the long_url. If the error can't be parsed, the domain is -1
@@ -112,8 +111,14 @@ def _parse_error(error):
         domain = vals[0]
         url_endpoint = vals[1].split('Max retries exceeded with url: ')[-1].split(" (Caused by")[0]
         url_endpoint = os.path.join('http://', domain + url_endpoint)
+        
+    elif 'Client Error: ' in error or 'Server Error' in error:
+        url_endpoint = error.split(" for url: ")[-1]
+        domain = get_domain(url_endpoint)
+        
     else:
         domain, url_endpoint = -1, error
+    
     return domain, url_endpoint
 
 
@@ -127,20 +132,21 @@ def expand(link, timeout=2, **kwargs):
     '''
     try:
         r = requests.head(link, 
-                          allow_redirects=True, 
-                          timeout=timeout,
-                          **kwargs)
+                            allow_redirects=True, 
+                            timeout=timeout,
+                            **kwargs)
+        r.raise_for_status()
         url_long = r.url
         domain = get_domain(url_long)
-
+        
     except requests.exceptions.RequestException as e:
         domain, url_long = _parse_error(str(e))
-                   
+
     if domain == 'ln.is':
         url_long = link.replace('ln.is/', '')
         domain = get_domain(url_long)
         
-    elif domain in constants.short_domain_ad_redirects:
+    elif domain in constants.short_domain_ad_redirects or domain == -1:
         url_long = unshortenit.UnshortenIt().unshorten(link,
                                                        timeout=timeout)
         domain = get_domain(url_long)
@@ -173,7 +179,8 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
     np.random.shuffle(links_to_unshorten)
 
     # read cache file
-    out = []
+    unshortened_urls = []
+    error = []
     if cache_file and os.path.exists(cache_file):
         with open(cache_file, 'r') as f_:
             for line in f_:
@@ -192,66 +199,16 @@ def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64,
                     data = future.result()
                 except Exception as exc:
                     data = str(type(exc))
+                    error.append({chunk[i] : str(type(exc))})
                 finally:
-                    out.append(data)
-                    
+                    unshortened_urls.append(data)
                     # save the results
                     if cache_file and isinstance(data, dict):
                         with open(cache_file, 'a') as f_:
                             f_.write(json.dumps(data) + '\n')
-                       
-    # how many instances failed?
-    error = [{i: _} for i, _ in enumerate(out) if not isinstance(_, dict)]
-    
-    # read the rest to a dataframe
-    df = pd.DataFrame([row for row in out if isinstance(row, dict)])
     
     if return_errors:
-        return df, error
+        return unshortened_urls, error
     else:
-        return df
+        return unshortened_urls
     
-
-def count_matrix(df, user_col='user.id', domain_col='link.domain', 
-                 unique_count_col='tweet.id', domain_list=[]):
-    '''
-    Creates a count matrix of number of domains shared per user. 
-    Where each column is a count of domains, and each row represents on user.
-    
-    
-    :input df: (pandas dataframe) an un-aggregrated dataframe of links shared by user.
-    :input user_col: (str) the name of the column in input dataframe to aggragate on. 
-            Feeds into the index argument in `pd.pivot_table`.
-    :inout domain_col: (str) the name of the column in the input dataframe to count.
-            Feeds into the columns argument in `pd.pivot_table`.
-    :input count_unique_col: (str) the name of the column to count unique values amongst domain_col.
-    :input domain_list: (list) a list of normalized domains to create the count matrix on.
-    
-    :returns: matrix (pandas dataframe) counts per domain by user.
-    '''
-    # check the correct columns are present
-    for col in [user_col, domain_col, unique_count_col]:
-        try:
-            assert(col in df.columns)
-        except:
-            raise ValueError(f"{col} is not a column in the input dataframe")
-    
-    # what are all the domains available?
-    all_domains = df[domain_col].unique()    
-    
-    # create a count matrix
-    matrix = df.pivot_table(index=user_col, 
-                            columns=[domain_col],
-                            values=[unique_count_col],
-                            aggfunc=lambda x: len(x.unique()),
-                            fill_value=0)
-    
-    # standardize the column names, and remove any hierarchys for readability.
-    matrix = matrix.T.reset_index(level=0, drop=True).T
-    matrix.columns.name = None
-    
-    # filter out columns not included in domain_list
-    if domain_list:
-        matrix = matrix[[c for c in all_domains if c in domain_list]]
-    
-    return matrix
