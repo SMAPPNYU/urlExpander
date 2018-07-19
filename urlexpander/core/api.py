@@ -26,8 +26,7 @@ __all__ = ['strip_url',
            'is_short',
            'is_short_domain',
            'expand',
-           'multithread_expand',
-           'count_matrix']
+           'multithread_expand']
 
 __author__ = 'Leon Yin'
 

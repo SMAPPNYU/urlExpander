@@ -5,7 +5,7 @@ https://github.com/SMAPPNYU/smappdragon
 
 from urlexpander.core.api import get_domain
 
-__all__ = ['get_link']
+__all__ = ['get_link', 'count_matrix']
 __author__= 'Leon Yin'
 
 def _get_full_text(tweet):
@@ -15,12 +15,16 @@ def _get_full_text(tweet):
     :input tweet: a nested dictionary of a Tweet either from the streaming or search API.
     :returns: string of the full_text field hidden in the Tweet
     '''
-    if "extended_tweet" in tweet and "full_text" in tweet["extended_tweet"]:
-        return tweet["extended_tweet"]["full_text"]
-    try:
-        return tweet["text"]
-    except:
-        return tweet['full_text']
+    if isinstance(tweet, dict):
+        if "extended_tweet" in tweet and "full_text" in tweet["extended_tweet"]:
+            return tweet["extended_tweet"]["full_text"]
+        elif "full_text" in tweet:
+            tweet['full_text']
+        else:
+            return tweet.get("text")
+    else:
+        dtype = type(tweet)
+        raise ValueError("Input needs to be key-value pair! Input is {}".format(dtype))
     
 def get_link(tweet):
     '''
@@ -29,13 +33,13 @@ def get_link(tweet):
     The metadata dict contains the following columns:
     
     columns = {
-      'link.domain' : 'the domain of the URL', 
-      'link.url_long' : 'the URL (this can be short!)', 
-      'link.url_short' : 'The t.co URL', 
-      'tweet.created_at' : 'When the tweet was created', 
-      'tweet.id' : 'The ID of the tweet', 
-      'tweet.text' : 'The Full text of the tweet', 
-      'user.id' : 'The Twitter ID of the tweeter'
+      'link_domain' : 'the domain of the URL', 
+      'link_url_long' : 'the URL (this can be short!)', 
+      'link_url_short' : 'The t.co URL', 
+      'tweet_created_at' : 'When the tweet was created', 
+      'tweet_id' : 'The ID of the tweet', 
+      'tweet_text' : 'The Full text of the tweet', 
+      'user_id' : 'The Twitter ID of the tweeter'
     }
     
     :input tweet: a nested dictionary of a Tweet either from the streaming or search API.
@@ -65,8 +69,8 @@ def get_link(tweet):
                 yield r  
 
                 
-def count_matrix(df, user_col='user.id', domain_col='link.domain', 
-                 unique_count_col='tweet.id', domain_list=[]):
+def count_matrix(df, user_col='user_id', domain_col='link_domain', 
+                 unique_count_col='tweet_id', domain_list=[]):
     '''
     Creates a count matrix of number of domains shared per user. 
     Where each column is a count of domains, and each row represents on user.
