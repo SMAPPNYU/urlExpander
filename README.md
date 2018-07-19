@@ -40,7 +40,7 @@ resolved_links = ux.multithread_expand(list_of_short_urls,
                                        return_errors=False)
 ```
 
-Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush=true) for a  more in-depth quickstart!
+Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush_cache=true) for a  more in-depth quickstart!
 
 ## Documentation
 We'll generate a readthedocs shortly!
