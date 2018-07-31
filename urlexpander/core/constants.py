@@ -39,7 +39,10 @@ short_domain = [
     't2m.io', 'shrt.li', 'elbo.in',
     'shrtfly.com', 'hiveam.com',
     'slink.be', 'plu.sh', 'cutt.ly',
-    'zii.bz', 'munj.pw', 
+    'zii.bz', 'munj.pw', 't.co',
+    'go.usa.gov', 'on.fb.me', 'j.mp',
+    'amp.twimg.com', 'youtu.be', 'ofa.bo',
+    
 ]
 
 # there are domain shorteners for common news outlets (Leon Yin 2018).
@@ -49,6 +52,7 @@ short_domain_media = [
     'politi.co', 'fxn.ws', 'usat.ly', 
     'huff.to', 'nyp.st', 'cbsloc.al',
     'wpo.st', 'on.wsj.com', 'nydn.us',
+    'on.wsj.com',
 ]
 
 all_short_domains = short_domain_ad_redirects + short_domain + ['ln.is']
@@ -57,5 +61,5 @@ congress_dataset_url = ('https://raw.githubusercontent.com/SMAPPNYU/'
                         'urlExpander/master/datasets/'
                         'congress_sample_links.csv')
 
-us_nation_domain_url = ('https://raw.githubusercontent.com/SMAPPNYU/'                             'urlExpander/master/datasets/'
+us_nation_domain_url = ('https://raw.githubusercontent.com/SMAPPNYU/'                                                 'urlExpander/master/datasets/'
                         'us_national_domains.csv')

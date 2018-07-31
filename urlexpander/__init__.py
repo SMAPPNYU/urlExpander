@@ -2,9 +2,7 @@ from urlexpander.core.api import(
     strip_url,
     get_domain,
     is_short,
-    is_short_domain,
-    expand,
-    multithread_expand,
+    expand
 )
 
 from urlexpander.core import (
@@ -14,5 +12,5 @@ from urlexpander.core import (
     datasets
 )
 
-__version__ = '0.0.29'
+__version__ = '0.0.31'
 __author__ = 'Leon Yin'

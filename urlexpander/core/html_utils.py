@@ -28,7 +28,8 @@ def _search_webpage_title(text, headers=constants.headers, **kwargs):
     
 def _search_webpage_description(text, headers=constants.headers, **kwargs):
     desc = None
-    regex =  re.compile('<meta property="og?:description" content="(.*?)>', re.IGNORECASE|re.DOTALL)
+    regex =  re.compile('<meta property="og?:description" content="(.*?)>',
+                        re.IGNORECASE|re.DOTALL)
     try:
         desc = regex.search(text).group(1).rstrip('/').rstrip(' ').rstrip('"')
         desc = html.unescape(desc)

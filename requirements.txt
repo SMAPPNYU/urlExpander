@@ -4,5 +4,4 @@ numpy>=1.14.2
 tldextract>=2.1.0
 pandas>=0.19.2
 requests>=2.14.2
-urlexpander
 runtimestamp
