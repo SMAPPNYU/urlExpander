@@ -22,25 +22,22 @@ pip install urlexpander
 
 ## Quickstart
 ```
-import urlexpander as ux
-ux.expand('https://trib.al/xXI5ruM')
+import urlexpander
+urlexpander.expand('https://trib.al/xXI5ruM')
 ```
 returns
 ```
-{'original_url': 'https://trib.al/xXI5ruM',
- 'resolved_domain': 'breitbart.com',
- 'resolved_url': 'https://www.breitbart.com/video/2017/12/31/lindsey-graham-trump-just-cant-tweet-iran/'}
+'https://www.breitbart.com/video/2017/12/31/lindsey-graham-trump-just-cant-tweet-iran/'
 ```
 The function shines given a massive list of urls to unshorten:
 ```
-resolved_links = ux.multithread_expand(list_of_short_urls, 
-                                       chunksize=1280, 
-                                       n_workers=64,
-                                       cache_file='tmp.json',
-                                       return_errors=False)
+resolved_links = urlexpander.multithread_expand(list_of_short_urls, 
+                                                chunksize=1280, 
+                                                n_workers=64,
+                                                cache_file='tmp.json')
 ```
 
-Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush_cache=true) for a  more in-depth quickstart!
+Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush_cache=true) for a more in-depth quickstart!
 
 ## Documentation
 We'll generate a readthedocs shortly!
