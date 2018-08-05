@@ -63,7 +63,7 @@ def get_link(tweet):
             r['link_url_long'] = url.get('expanded_url')
             
             if r['link_url_long']:
-                r['link_domain'] = get_domain(r['link.url_long'])
+                r['link_domain'] = get_domain(r['link_url_long'])
                 r['link_url_short'] = url.get('url')
 
                 yield r  
