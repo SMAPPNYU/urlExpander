@@ -200,8 +200,9 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
                 for line in f_:
                     unshortened_urls.append(json.loads(line))
                 abd_ = [_['original_url'] for _ in unshortened_urls]
-                links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
-
+                #links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
+                links_to_unshorten = list(set(abd_).symmetric_difference(set(links_to_unshorten)))
+        
         # chunk the list of arguments
         if verbose:
             chunk_iter = tqdm(_chunks(links_to_unshorten, chunksize=chunksize))

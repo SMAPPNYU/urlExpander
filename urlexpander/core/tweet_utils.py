@@ -48,12 +48,15 @@ def get_link(tweet):
     if not isinstance(tweet, dict):
         return
     
-    row = {
-        'user_id': tweet['user']['id'],
-        'tweet_id': tweet['id'],
-        'tweet_created_at': tweet['created_at'],
-        'tweet_text' : _get_full_text(tweet)
-    }
+    try: 
+        row = {
+            'user_id': tweet['user']['id'],
+            'tweet_id': tweet['id'],
+            'tweet_created_at': tweet['created_at'],
+            'tweet_text' : _get_full_text(tweet)
+        }
+    except:
+        return
 
     list_urls = tweet['entities']['urls']
     
