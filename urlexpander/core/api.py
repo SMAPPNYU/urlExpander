@@ -141,8 +141,8 @@ def _expand(link, timeout=2, **kwargs):
     except requests.exceptions.RequestException as e:
         domain, url_long = _parse_error(str(e))
 
-    if domain == 'ln.is':
-        url_long = link.replace('ln.is/', '')
+    if domain in constants.url_appenders:
+        url_long = link.replace(domain, '')
         domain = get_domain(url_long)
         
     elif domain in constants.short_domain_ad_redirects or domain == -1:

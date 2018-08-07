@@ -55,6 +55,8 @@ short_domain_media = [
     'on.wsj.com',
 ]
 
+url_appenders = ['ln.is', 'linkis.com']
+
 all_short_domains = short_domain_ad_redirects + short_domain + ['ln.is']
 
 congress_dataset_url = ('https://raw.githubusercontent.com/SMAPPNYU/'
