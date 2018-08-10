@@ -55,9 +55,10 @@ short_domain_media = [
     'on.wsj.com',
 ]
 
+# there are link shorteners with the actual link appended on the end
 url_appenders = ['ln.is', 'linkis.com']
 
-all_short_domains = short_domain_ad_redirects + short_domain + ['ln.is']
+all_short_domains = short_domain_ad_redirects + short_domain + url_appenders
 
 congress_dataset_url = ('https://raw.githubusercontent.com/SMAPPNYU/'
                         'urlExpander/master/datasets/'
