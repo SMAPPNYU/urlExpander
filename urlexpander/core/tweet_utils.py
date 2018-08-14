@@ -5,7 +5,7 @@ https://github.com/SMAPPNYU/smappdragon
 
 from urlexpander.core.api import get_domain
 
-__all__ = ['get_link', 'count_matrix']
+__all__ = ['get_link', 'count_matrix', 'strip_tweet_link']
 __author__= 'Leon Yin'
 
 def _get_full_text(tweet):
@@ -48,12 +48,15 @@ def get_link(tweet):
     if not isinstance(tweet, dict):
         return
     
-    row = {
-        'user_id': tweet['user']['id'],
-        'tweet_id': tweet['id'],
-        'tweet_created_at': tweet['created_at'],
-        'tweet_text' : _get_full_text(tweet)
-    }
+    try: 
+        row = {
+            'user_id': tweet['user']['id'],
+            'tweet_id': tweet['id'],
+            'tweet_created_at': tweet['created_at'],
+            'tweet_text' : _get_full_text(tweet)
+        }
+    except:
+        return
 
     list_urls = tweet['entities']['urls']
     
@@ -63,10 +66,11 @@ def get_link(tweet):
             r['link_url_long'] = url.get('expanded_url')
             
             if r['link_url_long']:
-                r['link_domain'] = get_domain(r['link.url_long'])
+                r['link_domain'] = get_domain(r['link_url_long'])
                 r['link_url_short'] = url.get('url')
 
-                yield r  
+                yield r
+  
 
                 
 def count_matrix(df, user_col='user_id', domain_col='link_domain', 
@@ -113,3 +117,47 @@ def count_matrix(df, user_col='user_id', domain_col='link_domain',
     
     return matrix
 
+def _strip_tweet_link(link):
+    '''
+    Best attempt at stripping twitter links for screen names and tweet ids.
+    
+    :input link: a link with the domain 'twitter.com'
+    :returns: a list of dictionaries with the original link, the screen name, and the tweet_id of the link
+    '''
+    dict_ = {}
+    
+    dict_['resolved_url'] = link.lower()
+    if 'status' in link.split('/'):
+        list_ = link.lower().split('/')
+        try:
+            if 'i/web/status' in link: dict_['linked_screen_name'] == None
+            else: dict_['linked_screen_name'] = list_[list_.index('status') - 1]
+            dict_['linked_tweet_id'] = list_[list_.index('status') + 1]
+        except:
+            dict_['linked_screen_name'] = None
+            dict_['linked_tweet_id'] = None
+    
+    else:
+        dict_['linked_screen_name'] = link
+        dict_['linked_tweet_id'] = link
+    
+    return dict_
+
+def strip_tweet_link(link):
+    '''
+    Parses a link to twitter to get the screen name and tweet id
+    
+    :input link: a link or list of links with the domain 'twitter.com'
+    :returns: a list of dictionaries with the original link, the screen name, and the tweet_id of the link
+    '''
+    
+    if isinstance(link, str):
+        return _strip_tweet_link(link)
+    elif isinstance(link, list):
+        links_to_strip = list(set(link))
+        links = [_strip_tweet_link(link) for link in links_to_strip]
+        return links
+    else:
+        links_to_strip = list(set(list(link)))
+        links = [_strip_tweet_link(link) for link in links_to_strip]
+        return links

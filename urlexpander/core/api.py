@@ -141,14 +141,15 @@ def _expand(link, timeout=2, **kwargs):
     except requests.exceptions.RequestException as e:
         domain, url_long = _parse_error(str(e))
 
-    if domain == 'ln.is':
-        url_long = link.replace('ln.is/', '')
+    # replace list with constants.url_appenders
+    if domain in ['ln.is', 'linkis.com']:
+        url_long = link.replace(domain, '')
         domain = get_domain(url_long)
-        
     elif domain in constants.short_domain_ad_redirects or domain == -1:
         url_long = unshortenit.UnshortenIt().unshorten(link,
                                                        timeout=timeout)
         domain = get_domain(url_long)
+        
 
     return dict(original_url=link,
                 resolved_domain=domain,
@@ -200,10 +201,12 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
                 for line in f_:
                     unshortened_urls.append(json.loads(line))
                 abd_ = [_['original_url'] for _ in unshortened_urls]
-                links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
-
+                #links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
+                links_to_unshorten = list(set(abd_).symmetric_difference(set(links_to_unshorten)))
+        
         # chunk the list of arguments
         if verbose:
+            print("There are {} links to unshorten".format(len(links_to_unshorten)))
             chunk_iter = tqdm(_chunks(links_to_unshorten, chunksize=chunksize))
         else:
             chunk_iter = _chunks(links_to_unshorten, chunksize=chunksize)
@@ -222,6 +225,7 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
                         if verbose:
                             print("{} failed to resolve due to error: {}".format(chunk[i],
                                                                                  str(type(exc))))
+                    
                     finally:
                         if isinstance(data, dict):
                             unshortened_urls.append(data)
