@@ -1,6 +1,7 @@
 # urlExpander
 
 [![PyPI](https://img.shields.io/pypi/v/urlexpander.svg)](https://pypi.org/project/urlExpander/) [![PyPI](https://img.shields.io/pypi/l/urlexpander.svg)](https://github.com/SMAPPNYU/urlExpander/blob/master/LICENSE)
+[![DOI](https://zenodo.org/badge/140624652.svg)](https://zenodo.org/badge/latestdoi/140624652)
 
 urlExpander is a Python package for quickly and thoroughly expanding shortened URLs. 
 
@@ -48,11 +49,14 @@ urlExpander was written by [Leon Yin](http://www.leonyin.org/) with contribution
 Please cite urlExpander in your publications if it helps your research. Here is an example BibTeX entry:
 
 ```
-@software{urlexpander,
-  author = {Leon Yin and SMaPP Lab},
-  title = {urlExpander},
-  year = {2018}
-  howpublished = {https://github.com/SMAPPNYU/urlExpander},
+@misc{leon_yin_2018_1345144,
+  author       = {Leon Yin and
+                  Megan Brown},
+  title        = {SMAPPNYU/urlExpander: Initial release},
+  month        = aug,
+  year         = 2018,
+  doi          = {10.5281/zenodo.1345144},
+  url          = {https://doi.org/10.5281/zenodo.1345144}
 }
 ```
 Please also send us your work :)
