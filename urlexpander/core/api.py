@@ -237,71 +237,10 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
         return unshortened_urls_
 
 
-
-def multithread_expand(links_to_unshorten, chunksize=1280, n_workers=64, 
-                       cache_file=None, random_seed=303, 
-                       return_errors=True, **kwargs):
-    '''
-    Calls expand with multiple (n_workers) threads to unshorten a list of urls.
-    
-    :param links_to_unshorten: (list) a list of urls (str) to unshorten
-    :param chunksize: (int) chunks links_to_unshorten, which makes computation quicker with larger inputs
-    :param n_workers: (int) how many threads
-    :param cache_file: (str) a path to a json file to read and write results in
-    :param random_seed: (int) initializes the random state for shuffling the input
-    :param return_errors: (bool) whether to return a tuple of dataframe of shortened link, and dict of errors
-        or just the dataframe of shortened links
-        
-    
-    :returns: (list) a list of dictionaries perfect for Pandas Dataframes.
-    '''
-    
-    # shuffle the inputs, this is to reduce the changes of making requests to the same domain.
-    np.random.seed(random_seed)
-    np.random.shuffle(links_to_unshorten)
-    
-    ## filter for things that need to be shortened according to some boolean function.
-
-    # read cache file
-    unshortened_urls = []
-    error = []
-    if cache_file and os.path.exists(cache_file):
-        with open(cache_file, 'r') as f_:
-            for line in f_:
-                unshortened_urls.append(json.loads(line))
-            abd_ = [_['original_url'] for _ in unshortened_urls]
-            links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
-    
-    # chunk the list of arguments
-    for chunk in tqdm(_chunks(links_to_unshorten, chunksize=chunksize)):
-        # create n_workers threads, and map chunked argumnets to them
-        with concurrent.futures.ThreadPoolExecutor(max_workers = n_workers) as executor:
-            future_to_url = {executor.submit(expand, url, **kwargs): 
-                             url for url in chunk}
-            for i, future in enumerate(concurrent.futures.as_completed(future_to_url)):
-                try:
-                    data = future.result()
-                except Exception as exc:
-                    data = str(type(exc))
-                    error.append({chunk[i] : str(type(exc))})
-                finally:
-                    if isinstance(data, dict):
-                        unshortened_urls.append(data)
-                        # save the results
-                        if cache_file:
-                            with open(cache_file, 'a') as f_:
-                                f_.write(json.dumps(data) + '\n')
-    # reorder the urls (or join them into OG list)
-    # return list of unshorrtened_urls
-    if return_errors:
-        return unshortened_urls, error
-    else:
-        return unshortened_urls
-
 def multithread_function(links_to_unshorten, function, cache_col,
                          chunksize=1280, n_workers=64, 
                          cache_file=None, random_seed=303, 
-                         return_errors=True,  **kwargs):
+                         verbose=0, **kwargs):
     '''
     Calls 'function' with multiple (n_workers) threads.
     
@@ -310,13 +249,11 @@ def multithread_function(links_to_unshorten, function, cache_col,
     :param n_workers: (int) how many threads
     :param cache_file: (str) a path to a json file to read and write results in
     :param random_seed: (int) initializes the random state for shuffling the input
-    :param return_errors: (bool) whether to return a tuple of dataframe of shortened link, and dict of errors
-        or just the dataframe of shortened links
+    :param verbose: (bool) whether to return errors and updates
         
     
     :returns: (list) a list of dictionaries perfect for Pandas Dataframes.
-    '''
-    
+    ''' 
     # shuffle the inputs, this is to reduce the changes of making requests to the same domain.
     np.random.seed(random_seed)
     np.random.shuffle(links_to_unshorten)
@@ -331,8 +268,12 @@ def multithread_function(links_to_unshorten, function, cache_col,
             abd_ = [_[cache_col] for _ in unshortened_urls]
             links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
     
-    # chunk the list of arguments
-    for chunk in tqdm(_chunks(links_to_unshorten, chunksize=chunksize)):
+    if verbose:
+        chunk_iter = tqdm(_chunks(links_to_unshorten, chunksize=chunksize))
+    else:
+        chunk_iter = _chunks(links_to_unshorten, chunksize=chunksize)
+
+    for chunk in chunk_iter:
         # create n_workers threads, and map chunked argumnets to them
         with concurrent.futures.ThreadPoolExecutor(max_workers = n_workers) as executor:
             future_to_url = {executor.submit(function, url, **kwargs): 
@@ -342,7 +283,9 @@ def multithread_function(links_to_unshorten, function, cache_col,
                     data = future.result()
                 except Exception as exc:
                     data = str(type(exc))
-                    error.append({chunk[i] : str(type(exc))})
+                    if verbose:
+                            print("{} failed to resolve due to error: {}".format(chunk[i],
+                                                                                 str(type(exc))))
                 finally:
                     if isinstance(data, dict):
                         unshortened_urls.append(data)
@@ -350,9 +293,6 @@ def multithread_function(links_to_unshorten, function, cache_col,
                         if cache_file:
                             with open(cache_file, 'a') as f_:
                                 f_.write(json.dumps(data) + '\n')
-        
-    if return_errors:
-        return unshortened_urls, error
-    else:
-        return unshortened_urls
+    
+    return unshortened_urls
     
