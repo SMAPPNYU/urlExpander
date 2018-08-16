@@ -142,8 +142,8 @@ def _expand(link, timeout=2, **kwargs):
         domain, url_long = _parse_error(str(e))
 
     # replace list with constants.url_appenders
-    if domain in ['ln.is', 'linkis.com']:
-        url_long = link.replace(domain, '')
+    if domain in constants.url_appenders:
+        url_long = url_long.replace(domain, '')
         domain = get_domain(url_long)
     elif domain in constants.short_domain_ad_redirects or domain == -1:
         url_long = unshortenit.UnshortenIt().unshorten(link,

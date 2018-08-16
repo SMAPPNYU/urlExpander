@@ -42,7 +42,7 @@ short_domain = [
     'zii.bz', 'munj.pw', 't.co',
     'go.usa.gov', 'on.fb.me', 'j.mp',
     'amp.twimg.com', 'youtu.be', 'ofa.bo',
-    
+    'lnkd.in'
 ]
 
 # there are domain shorteners for common news outlets (Leon Yin 2018).
