@@ -64,5 +64,5 @@ congress_dataset_url = ('https://raw.githubusercontent.com/SMAPPNYU/'
                         'urlExpander/master/datasets/'
                         'congress_sample_links.csv')
 
-us_nation_domain_url = ('https://raw.githubusercontent.com/SMAPPNYU/'                                                 'urlExpander/master/datasets/'
+us_nation_domain_url = ('https://raw.githubusercontent.com/SMAPPNYU/'                                                                   'urlExpander/master/datasets/'
                         'us_national_domains.csv')

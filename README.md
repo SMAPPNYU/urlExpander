@@ -50,8 +50,7 @@ Please cite urlExpander in your publications if it helps your research. Here is 
 
 ```
 @misc{leon_yin_2018_1345144,
-  author       = {Leon Yin and
-                  Megan Brown},
+  author       = {Leon Yin},
   title        = {SMAPPNYU/urlExpander: Initial release},
   month        = aug,
   year         = 2018,
