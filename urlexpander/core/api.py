@@ -9,7 +9,6 @@ import glob
 import json
 import itertools
 import datetime
-import concurrent
 import concurrent.futures
 import collections
 import requests
@@ -64,9 +63,8 @@ def get_domain(url):
     elif extracted.subdomain == '':
         domain = "{}.{}".format(extracted.domain, extracted.suffix)
     else:
-        domain = "{}.{}.{}".format(extracted.subdomain, extracted.domain, extracted.suffix)
-    domain = domain.lower().replace('www.', '')
-    
+        domain = "{}.{}".format(extracted.domain, extracted.suffix)
+    domain = domain.lower()
     return domain
 
 def is_short(url, list_of_domains=constants.all_short_domains):
@@ -97,7 +95,7 @@ def _is_short_domain(domain, list_of_domains=constants.all_short_domains):
         return True
     return False
 
-def _parse_error(error):
+def _parse_error(error, verbose=False):
     '''
     Although some redirects no longer work, we can still use the response from the error to figure out where it would have gone.
     This function parses error messages from requests.head (called in expand), to try to figure out what website the bit-link was intended to re-direct to.
@@ -106,23 +104,29 @@ def _parse_error(error):
     :returns: the domain parsed from the error string, and the long_url. If the error can't be parsed, the domain is -1
     '''
     if 'ConnectionPool' in error:
+        if verbose:
+            print("ConnectionPool")
         vals = error.split("ConnectionPool(host='")[1].split("',")
         domain = vals[0]
         url_endpoint = vals[1].split('Max retries exceeded with url: ')[-1].split(" (Caused by")[0]
-        url_endpoint = os.path.join('http://', domain, url_endpoint)
+        url_endpoint = os.path.join('http://', domain, '__CONNECTIONPOOL_ERROR__')
         
     elif 'Client Error: ' in error or 'Server Error' in error:
+        if verbose:
+            print("ConnectionError or Server Error")
         url_endpoint = error.split(" for url: ")[-1]
         domain = get_domain(url_endpoint)
         url_endpoint = os.path.join('http://', domain, '__CLIENT_ERROR__')
         
     else:
+        if verbose:
+            print("Unknown error")
         domain, url_endpoint = -1, None
     
     return domain, url_endpoint
 
 
-def _expand(link, timeout=2, **kwargs):
+def _expand(link, timeout=2, verbose=False, **kwargs):
     '''
     Expands a url, while taking into consideration: special link shortener or analytics platforms that either need a sophisticated
     redirect(st.sh), or parsing of the url (ln.is)
@@ -138,15 +142,24 @@ def _expand(link, timeout=2, **kwargs):
         r.raise_for_status()
         url_long = r.url
         domain = get_domain(url_long)
+        if verbose:
+            print("First expansion OK")
         
     except requests.exceptions.RequestException as e:
-        domain, url_long = _parse_error(str(e))
+        if verbose:
+            print("First expansion Failed")
+        domain, url_long = _parse_error(str(e), verbose=verbose)
 
     # replace list with constants.url_appenders
     if domain in constants.url_appenders:
+        if verbose:
+            print("domain in url appenders")
         url_long = url_long.replace(domain, '')
         domain = get_domain(url_long)
+    
     elif domain in constants.short_domain_ad_redirects or domain == -1:
+        if verbose:
+            print("domain in ad redirect")
         url_long = unshortenit.UnshortenIt().unshorten(link,
                                                        timeout=timeout)
         domain = get_domain(url_long)
@@ -160,15 +173,15 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
            cache_file=None, random_seed=303, 
            verbose=0, filter_function=None, **kwargs):
     '''
-    Calls expand with multiple (n_workers) threads to unshorten a list of urls.
+    Calls expand with multiple (``n_workers``) threads to unshorten a list of urls. Unshortens all urls by default, unless one sets a ``filter_function``.
     
     :param links_to_unshorten: (list, str) either an idividual or list (str) of urls to unshorten
     :param chunksize: (int) chunks links_to_unshorten, which makes computation quicker with larger inputs
     :param n_workers: (int) how many threads
     :param cache_file: (str) a path to a json file to read and write results in
     :param random_seed: (int) initializes the random state for shuffling the input
-    :param verbose: (bool) whether to print updates and errors
-    :param filter function: (func) a boolean used to filter url shorteners out.
+    :param verbose: (int) whether to print updates and errors. 0 is silent. 1 is progress bar. 2 is progress bar and errors.
+    :param filter_function: (func) a boolean used to filter url shorteners out
         
     
     :returns: (list) a list of resolved urls
@@ -208,7 +221,8 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
         # chunk the list of arguments
         if verbose:
             print("There are {} links to unshorten".format(len(links_to_unshorten)))
-            chunk_iter = tqdm(_chunks(links_to_unshorten, chunksize=chunksize))
+            total = (len(links_to_unshorten) // chunksize) + 1
+            chunk_iter = tqdm(_chunks(links_to_unshorten, chunksize=chunksize), total=total)
         else:
             chunk_iter = _chunks(links_to_unshorten, chunksize=chunksize)
         
@@ -223,10 +237,9 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
                     except Exception as exc:
                         data = str(type(exc))
                         #error.append({chunk[i] : str(type(exc))})
-                        if verbose:
+                        if verbose == 2:
                             print("{} failed to resolve due to error: {}".format(chunk[i],
                                                                                  str(type(exc))))
-                    
                     finally:
                         if isinstance(data, dict):
                             unshortened_urls.append(data)
@@ -252,6 +265,7 @@ def multithread_function(links_to_unshorten, function, cache_col,
     :param links_to_unshorten: (list) a list of urls (str) to unshorten
     :param chunksize: (int) chunks links_to_unshorten, which makes computation quicker with larger inputs
     :param n_workers: (int) how many threads
+    :param cache_col: (str) the unique key-name to use to save cached rows.
     :param cache_file: (str) a path to a json file to read and write results in
     :param random_seed: (int) initializes the random state for shuffling the input
     :param verbose: (bool) whether to return errors and updates

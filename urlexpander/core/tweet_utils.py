@@ -74,7 +74,8 @@ def get_link(tweet):
 
                 
 def count_matrix(df, user_col='user_id', domain_col='link_domain', 
-                 unique_count_col='tweet_id', domain_list=[]):
+                 unique_count_col='tweet_id', normalize=False, 
+                 min_freq=None, domain_list=[], exclude_domain_list=[]):
     '''
     Creates a count matrix of number of domains shared per user. 
     Where each column is a count of domains, and each row represents on user.
@@ -86,7 +87,9 @@ def count_matrix(df, user_col='user_id', domain_col='link_domain',
     :inout domain_col: (str) the name of the column in the input dataframe to count.
             Feeds into the columns argument in `pd.pivot_table`.
     :input count_unique_col: (str) the name of the column to count unique values amongst domain_col.
-    :input domain_list: (list) a list of normalized domains to create the count matrix on.
+    :input domain_list: (list) a list of standardized domains to create the count matrix with (these become each column).
+    :input domain_list: (list) a list of standardized domains to exclude in the count matrix on (these will not be included in the columns).
+    :input min_freq: (int) the minimum frequency that a domain can occur before being cut off as a feature in the count matrix. For example, if this is set to 5, and NYT.com only shows up 4 times, it will not be a feature (or column) in the count matrix
     
     :returns: matrix (pandas dataframe) counts per domain by user.
     '''
@@ -114,6 +117,18 @@ def count_matrix(df, user_col='user_id', domain_col='link_domain',
     # filter out columns not included in domain_list
     if domain_list:
         matrix = matrix[[c for c in all_domains if c in domain_list]]
+    if exclude_domain_list:
+        matrix = matrix[[c for c in all_domains if c not in exclude_domain_list]]
+    
+    # filter out domains that don't show up more than `min_freq` times
+    if min_freq:
+        if isinstance(min_freq, int):
+            matrix = matrix[matrix.columns[matrix.sum()>min_freq]]
+    
+    # normalize row counts
+    if normalize:
+        matrix = matrix.div(matrix.sum(axis=1), axis=0)
+    
     
     return matrix
 
