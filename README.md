@@ -32,10 +32,10 @@ returns
 ```
 The function shines given a massive list of urls to unshorten:
 ```
-resolved_links = urlexpander.multithread_expand(list_of_short_urls, 
-                                                chunksize=1280, 
-                                                n_workers=64,
-                                                cache_file='tmp.json')
+resolved_links = urlexpander.expand(list_of_short_urls, 
+                                    chunksize=1280, 
+                                    n_workers=64,
+                                    cache_file='tmp.json')
 ```
 
 Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush_cache=true) for a more in-depth quickstart!
