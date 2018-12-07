@@ -26,6 +26,7 @@ setup(
     author_email="whereisleon@gmail.com",
     url="https://github.com/SMAPPNYU/urlExpander",
     keywords='smapp social media unshorten expand link url',
+    long_description_content_type="text/markdown",
     license="MIT",
     install_requires=[
         'tldextract',

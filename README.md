@@ -40,6 +40,10 @@ resolved_links = urlexpander.expand(list_of_short_urls,
 
 Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush_cache=true) for a more in-depth quickstart!
 
+## More Examples
+[Links as Data](https://github.com/yinleon/links-as-data)<br>
+How to extract links from congressional Tweets, preprocess them, and use them as features to predict poltical affiliation. View the Notebook on [GitHub](https://github.com/yinleon/links-as-data/blob/master/nbs/congress-links.ipynb) | [NbViewer](http://bit.ly/links-as-data) | [Slides](http://bit.ly/links-as-data-slides)| [Binder](https://mybinder.org/v2/gh/yinleon/links-as-data/master?filepath=nbs%2Fcongress-links.ipynb)
+
 ## Documentation
 We'll generate a readthedocs shortly!
 
