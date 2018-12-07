@@ -12,5 +12,5 @@ from urlexpander.core import (
     datasets
 )
 
-__version__ = '0.0.33'
+__version__ = '0.0.34'
 __author__ = 'Leon Yin'

@@ -8,7 +8,12 @@ import collections
 sys.path.append(os.path.abspath('../')) 
 import urlexpander
 
+__author__ = 'Leon Yin'
+
 class expand(unittest.TestCase):
+    '''
+    This is a simple test to make sure the urlexpander's core function works for a single link, and a list of links. If these bitlinks dissappear, the tests will fail. So it may be smart to change these every quarter.
+    '''
     @classmethod
     def setUpClass(cls):
         cls.urls = [
@@ -33,6 +38,16 @@ class expand(unittest.TestCase):
         self.assertEqual(self.resolved_urls, 
                         urlexpander.expand(self.urls))
 
+    def test_cacheing(self):
+        self.assertEqual(self.resolved_urls, 
+                        urlexpander.expand(self.urls, cache_file='__cache.json'))
+        self.assertEqual(self.resolved_urls, 
+                        urlexpander.expand(self.urls, cache_file='__cache.json'))
+        os.remove('__cache.json')
+    
+    def test_cacheing(self):
+        self.assertEqual(self.resolved_urls, 
+                        urlexpander.expand(self.urls, cache_file='__cache.json'))
         
 if __name__ == '__main__':
     unittest.main()

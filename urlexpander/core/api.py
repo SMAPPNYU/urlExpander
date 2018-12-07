@@ -203,19 +203,17 @@ def expand(links_to_unshorten, chunksize=1280, n_workers=1,
         np.random.seed(random_seed)
         np.random.shuffle(links_to_unshorten)
 
-        ## filter for things that need to be shortened according to some boolean function.
+        # filter for URLs that need to be shortened according to some boolean function.
         if filter_function:
             links_to_unshorten = [_ for _ in links_to_unshorten if filter_function(_)]
 
         # read cache file
         unshortened_urls = []
-        #error = []
         if cache_file and os.path.exists(cache_file):
             with open(cache_file, 'r') as f_:
                 for line in f_:
                     unshortened_urls.append(json.loads(line))
                 abd_ = [_['original_url'] for _ in unshortened_urls]
-                #links_to_unshorten = [link for link in links_to_unshorten if link not in abd_]
                 links_to_unshorten = list(set(abd_).symmetric_difference(set(links_to_unshorten)))
         
         # chunk the list of arguments

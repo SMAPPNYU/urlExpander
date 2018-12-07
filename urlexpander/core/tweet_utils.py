@@ -5,7 +5,7 @@ https://github.com/SMAPPNYU/smappdragon
 
 from urlexpander.core.api import get_domain
 
-__all__ = ['get_link', 'count_matrix', 'strip_tweet_link']
+__all__ = ['get_link', 'count_matrix']
 __author__= 'Leon Yin'
 
 def _get_full_text(tweet):
@@ -38,7 +38,8 @@ def get_link(tweet):
       'link_url_short' : 'The t.co URL', 
       'tweet_created_at' : 'When the tweet was created', 
       'tweet_id' : 'The ID of the tweet', 
-      'tweet_text' : 'The Full text of the tweet', 
+      'tweet_text' : 'The Full text of the tweet',
+      'tweet_type' : 'Whether the tweet is quoted, retweeted, or original'
       'user_id' : 'The Twitter ID of the tweeter'
     }
     
@@ -63,6 +64,7 @@ def get_link(tweet):
     if list_urls:
         for url in list_urls:
             r = row.copy()
+            r['tweet_type'] = 'OG'
             r['link_url_long'] = url.get('expanded_url')
             
             if r['link_url_long']:
@@ -70,7 +72,35 @@ def get_link(tweet):
                 r['link_url_short'] = url.get('url')
 
                 yield r
-  
+                
+    if 'retweeted_status' in tweet:
+        retweeted_list_urls = tweet['retweeted_status']['entities']['urls']
+        if retweeted_list_urls:
+            for url in retweeted_list_urls:
+                r = row.copy()
+                r['tweet_type'] = 'RT'
+                r['link_url_long'] = url.get('expanded_url')
+
+                if r['link_url_long']:
+                    r['link_domain'] = get_domain(r['link_url_long'])
+                    r['link_url_short'] = url.get('url')
+
+                    yield r
+
+    if 'quoted_status' in tweet:
+        quoted_list_urls =  tweet['quoted_status']['entities']['urls']
+        if quoted_list_urls:
+            for url in quoted_list_urls:
+                r = row.copy()
+                r['tweet_type'] = 'Q'
+                r['link_url_long'] = url.get('expanded_url')
+
+                if r['link_url_long']:
+                    r['link_domain'] = get_domain(r['link_url_long'])
+                    r['link_url_short'] = url.get('url')
+
+                    yield r
+
 
                 
 def count_matrix(df, user_col='user_id', domain_col='link_domain', 
@@ -84,7 +114,7 @@ def count_matrix(df, user_col='user_id', domain_col='link_domain',
     :input df: (pandas dataframe) an un-aggregrated dataframe of links shared by user.
     :input user_col: (str) the name of the column in input dataframe to aggragate on. 
             Feeds into the index argument in `pd.pivot_table`.
-    :inout domain_col: (str) the name of the column in the input dataframe to count.
+    :input domain_col: (str) the name of the column in the input dataframe to count.
             Feeds into the columns argument in `pd.pivot_table`.
     :input count_unique_col: (str) the name of the column to count unique values amongst domain_col.
     :input domain_list: (list) a list of standardized domains to create the count matrix with (these become each column).
@@ -98,7 +128,13 @@ def count_matrix(df, user_col='user_id', domain_col='link_domain',
         try:
             assert(col in df.columns)
         except:
-            raise ValueError(f"{col} is not a column in the input dataframe")
+            raise ValueError("{} is not a column in the input dataframe".format(col))
+    
+    # filter to only those in the domain list
+    if domain_list:
+        df = df[df[domain_col].isin(domain_list)]
+    if exclude_domain_list:
+        df = df[df[~domain_col].isin(exclude_domain_list)]
     
     # what are all the domains available?
     all_domains = df[domain_col].unique()    
@@ -114,7 +150,7 @@ def count_matrix(df, user_col='user_id', domain_col='link_domain',
     matrix = matrix.T.reset_index(level=0, drop=True).T
     matrix.columns.name = None
     
-    # filter out columns not included in domain_list
+    # filter out columns not included in domain_list and re-orders the columns
     if domain_list:
         matrix = matrix[[c for c in all_domains if c in domain_list]]
     if exclude_domain_list:
@@ -129,50 +165,4 @@ def count_matrix(df, user_col='user_id', domain_col='link_domain',
     if normalize:
         matrix = matrix.div(matrix.sum(axis=1), axis=0)
     
-    
     return matrix
-
-def _strip_tweet_link(link):
-    '''
-    Best attempt at stripping twitter links for screen names and tweet ids.
-    
-    :input link: a link with the domain 'twitter.com'
-    :returns: a list of dictionaries with the original link, the screen name, and the tweet_id of the link
-    '''
-    dict_ = {}
-    
-    dict_['resolved_url'] = link.lower()
-    if 'status' in link.split('/'):
-        list_ = link.lower().split('/')
-        try:
-            if 'i/web/status' in link: dict_['linked_screen_name'] == None
-            else: dict_['linked_screen_name'] = list_[list_.index('status') - 1]
-            dict_['linked_tweet_id'] = list_[list_.index('status') + 1]
-        except:
-            dict_['linked_screen_name'] = None
-            dict_['linked_tweet_id'] = None
-    
-    else:
-        dict_['linked_screen_name'] = link
-        dict_['linked_tweet_id'] = link
-    
-    return dict_
-
-def strip_tweet_link(link):
-    '''
-    Parses a link to twitter to get the screen name and tweet id
-    
-    :input link: a link or list of links with the domain 'twitter.com'
-    :returns: a list of dictionaries with the original link, the screen name, and the tweet_id of the link
-    '''
-    
-    if isinstance(link, str):
-        return _strip_tweet_link(link)
-    elif isinstance(link, list):
-        links_to_strip = list(set(link))
-        links = [_strip_tweet_link(link) for link in links_to_strip]
-        return links
-    else:
-        links_to_strip = list(set(list(link)))
-        links = [_strip_tweet_link(link) for link in links_to_strip]
-        return links

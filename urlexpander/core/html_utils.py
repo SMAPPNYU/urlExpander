@@ -46,6 +46,17 @@ def _search_webpage_paragraphs(text, headers=constants.headers, **kwargs):
         pass
     return paragraphs
 
+def _search_image(text, headers=constants.headers, **kwargs):
+    img_url = None
+    regex =  re.compile('<meta property="og?:image" content="(.*?)>',
+                        re.IGNORECASE|re.DOTALL)
+    try:
+        img_url = regex.search(text).group(1).rstrip('/').rstrip(' ').rstrip('"')
+        img_url = html.unescape(desc)
+    except:
+        pass
+    return img_url
+
 def get_webpage_title(url, headers=constants.headers, **kwargs):
     r = requests.get(url, headers=headers, **kwargs)
     title = _search_webpage_title(r.text)

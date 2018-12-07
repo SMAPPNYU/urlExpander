@@ -41,8 +41,7 @@ short_domain = [
     'slink.be', 'plu.sh', 'cutt.ly',
     'zii.bz', 'munj.pw', 't.co',
     'go.usa.gov', 'on.fb.me', 'j.mp',
-    'amp.twimg.com', 'youtu.be', 'ofa.bo',
-    'lnkd.in'
+    'amp.twimg.com', 'ofa.bo',
 ]
 
 # there are domain shorteners for common news outlets (Leon Yin 2018).

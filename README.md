@@ -32,10 +32,10 @@ returns
 ```
 The function shines given a massive list of urls to unshorten:
 ```
-resolved_links = urlexpander.multithread_expand(list_of_short_urls, 
-                                                chunksize=1280, 
-                                                n_workers=64,
-                                                cache_file='tmp.json')
+resolved_links = urlexpander.expand(list_of_short_urls, 
+                                    chunksize=1280, 
+                                    n_workers=64,
+                                    cache_file='tmp.json')
 ```
 
 Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/urlExpander/blob/master/examples/quickstart.ipynb?flush_cache=true) for a more in-depth quickstart!
@@ -44,7 +44,7 @@ Check out this [Jupyter Notebook](http://nbviewer.jupyter.org/github/SMAPPNYU/ur
 We'll generate a readthedocs shortly!
 
 ## Acknowledgements
-urlExpander was written by [Leon Yin](http://www.leonyin.org/) with contributions by Nicole Baram and Gregory Eady for the [Social Media and Political Participation Lab at NYU](https://wp.nyu.edu/smapp/). 
+urlExpander was written by [Leon Yin](http://www.leonyin.org/) with contributions by Megan Brown, Nicole Baram and Gregory Eady for the [Social Media and Political Participation Lab at NYU](www.smappnyu.org). 
 
 Please cite urlExpander in your publications if it helps your research. Here is an example BibTeX entry:
 
@@ -63,3 +63,7 @@ Please also send us your work :)
 ## Research Output
 urlExpander is being used is several forthcoming publications from the SMaPP Lab (and perhaps from you?).
 We'll keep a running tally here.
+
+Yin, Leon, Franziska Roscher, Richard Bonneau, Jonathan Nagler, and Joshua A. Tucker. 2018.
+“[Your Friendly Neighborhood Troll: The Internet Research Agency’s Use of Local and Fake News in the 2016 US
+Presidential Campaign.](https://smappnyu.org/wp-content/uploads/2018/11/SMaPP_Data_Report_2018_01_IRA_Links_1.pdf)” <i>SMaPP Data Report</i>. 2018:01
