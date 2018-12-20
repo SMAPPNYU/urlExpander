@@ -126,5 +126,5 @@ def get_webpage_meta(url, headers=constants.headers, **kwargs):
     meta = OrderedDict(url = url,
                        title = _search_webpage_title(text),
                        description = _search_webpage_description(text),
-                       image_url = _search_webpage_image(text)
+                       image_url = _search_webpage_image(text))
     return meta
