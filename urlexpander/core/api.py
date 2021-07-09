@@ -126,19 +126,23 @@ def _parse_error(error, verbose=False):
     return domain, url_endpoint
 
 
-def _expand(link, timeout=2, verbose=False, **kwargs):
+def _expand(link, timeout=2, verbose=False, use_head=True, **kwargs):
     '''
     Expands a url, while taking into consideration: special link shortener or analytics platforms that either need a sophisticated
     redirect(st.sh), or parsing of the url (ln.is)
-    
+
     :param link: string of a link to unshorten.
     :returns: a dictionary with the original link, the unshortened link, and the unshortened domain.
     '''
+    if use_head:
+        http_op = requests.head
+    else:
+        http_op = requests.get
     try:
-        r = requests.head(link, 
-                          allow_redirects=True, 
-                          timeout=timeout,
-                          **kwargs)
+        r = http_op(link,
+                    allow_redirects=True,
+                    timeout=timeout,
+                    **kwargs)
         r.raise_for_status()
         url_long = r.url
         domain = get_domain(url_long)
