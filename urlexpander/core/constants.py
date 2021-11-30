@@ -43,8 +43,7 @@ short_domain = [
     'go.usa.gov', 'on.fb.me', 'j.mp',
     'amp.twimg.com', 'ofa.bo', 'zpr.io',
     'spr.ly', 'htl.li', 'eepurl.com',
-    'mailchi.mp', ''
-
+    'mailchi.mp'
 ]
 
 # Known custom short domains
@@ -82,5 +81,5 @@ congress_dataset_url = ('https://raw.githubusercontent.com/SMAPPNYU/'
                         'urlExpander/master/datasets/'
                         'congress_sample_links.csv')
 
-us_nation_domain_url = ('https://raw.githubusercontent.com/SMAPPNYU/'                                                                   'urlExpander/master/datasets/'
+us_nation_domain_url = ('https://raw.githubusercontent.com/SMAPPNYU/'                                                            'urlExpander/master/datasets/'
                         'us_national_domains.csv')
