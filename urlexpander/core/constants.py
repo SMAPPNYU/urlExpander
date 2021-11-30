@@ -41,7 +41,19 @@ short_domain = [
     'slink.be', 'plu.sh', 'cutt.ly',
     'zii.bz', 'munj.pw', 't.co',
     'go.usa.gov', 'on.fb.me', 'j.mp',
-    'amp.twimg.com', 'ofa.bo',
+    'amp.twimg.com', 'ofa.bo', 'zpr.io',
+    'spr.ly', 'htl.li', 'eepurl.com',
+    'mailchi.mp', ''
+
+]
+
+# Known custom short domains
+short_domain_custom = [
+    'jsonl.in', 'herit.ag', 'ind.pn',
+    'instagr.am', 'hann.it', 'digtb.us',
+    'ed.gr', 'fb.me', 'every.tw',
+    'lnkd.in', 'wh.gov', 'amzn.to',
+    'youtu.be', 'spoti.fi', 'wp.me'
 ]
 
 # there are domain shorteners for common news outlets (Leon Yin 2018).
@@ -51,13 +63,20 @@ short_domain_media = [
     'politi.co', 'fxn.ws', 'usat.ly', 
     'huff.to', 'nyp.st', 'cbsloc.al',
     'wpo.st', 'on.wsj.com', 'nydn.us',
-    'on.wsj.com',
+    'on.wsj.com', 'mktw.net', 'atxne.ws',
+    'reut.rs', 'onforb.es', 'slate.me',
+    'interc.pt', 'cs.pn',    'abcn.ws',
+    'abc13.co', 'apne.ws', 'cbsloc.al',
+    'nbcnews.to', 'hill.cm', 'n.pr',
+    'scne.ws', 'cnb.cx', 'fxn.ws',
+    'mol.im', 'bbc.in', 'wosu.pm',
+    'bloom.bg'
 ]
 
 # there are link shorteners with the actual link appended on the end
 url_appenders = ['ln.is', 'linkis.com']
 
-all_short_domains = short_domain_ad_redirects + short_domain + url_appenders
+all_short_domains = short_domain_ad_redirects + short_domain + + short_domain_custom + url_appenders
 
 congress_dataset_url = ('https://raw.githubusercontent.com/SMAPPNYU/'
                         'urlExpander/master/datasets/'
